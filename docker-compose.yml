@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+    command: daphne -b 0.0.0.0 -p 8000 bookclub.asgi:application
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=bookclub
+      - POSTGRES_USER=bookclub
+      - POSTGRES_PASSWORD=bookclub
+
+  redis:
+    image: redis:6
+
+  celery:
+    build:
+      context: .
+      dockerfile: docker/celery.Dockerfile
+    command: celery -A bookclub worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+
+  celery_beat:
+    build:
+      context: .
+      dockerfile: docker/celery.Dockerfile
+    command: /usr/local/bin/celery -A bookclub beat --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
