@@ -10,7 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import os
+from dotenv import load_dotenv
 from pathlib import Path
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-63ho--cm%x5nt@#1)kzs^*hulce@i%ap5i3l68^4=ouzr&hc7f'
-
+SECRET_KEY = os.getenv("SECRET_KEY")
+DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG") == "True"
 
 ALLOWED_HOSTS = []
 
@@ -75,8 +80,12 @@ ASGI_APPLICATION = 'bookclub.asgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', 'bookclub'),
+        'USER': os.getenv('POSTGRES_USER', 'bookclub'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'bookclub'),
+        'HOST': os.getenv('POSTGRES_HOST', 'db'),  # Use the 'db' hostname as defined in docker-compose.yml
+        'PORT': os.getenv('POSTGRES_PORT', '5432'),
     }
 }
 

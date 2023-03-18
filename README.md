@@ -5,6 +5,12 @@ Start up the containers
 docker-compose up -d
 ```
 
+Make Migrations
+
+```shell
+docker-compose run web python manage.py makemigrations
+```
+
 Run migrations
 ```shell
 docker-compose run web python manage.py migrate
