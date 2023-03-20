@@ -25,11 +25,17 @@ async def get_book_data(isbn):
     if data["totalItems"] > 0:
         volume_info = data["items"][0]["volumeInfo"]
 
+        print(volume_info["imageLinks"])
+        cover_url = None
+        if "imageLinks" in volume_info:
+            cover_url = volume_info["imageLinks"]["thumbnail"]
+
         return {
             "isbn": isbn,
             "title": volume_info.get("title", ""),
             "author": ", ".join(volume_info.get("authors", [])),
             "description": volume_info.get("description", ""),
+            "cover_url": cover_url,
         }
     else:
         return None
@@ -68,6 +74,7 @@ def create_or_update_book(book_data):
             "title": book_data["title"],
             "author": book_data["author"],
             "description": book_data["description"],
+            "cover_url": book_data["cover_url"],
         },
     )
     return book
@@ -99,6 +106,7 @@ async def on_raw_reaction_add(payload):
     book1_votes, book2_votes = await count_votes(vote_message)
     await update_book_vote(vote_message.id, book1_votes, book2_votes)
 
+
 @client.command()
 async def vote(ctx, isbn1: str, isbn2: str):
     await ctx.send(f'Vote command received. ISBN1: {isbn1}, ISBN2: {isbn2}')
@@ -108,8 +116,26 @@ async def vote(ctx, isbn1: str, isbn2: str):
     if book1_data and book2_data:
         book1 = await create_or_update_book(book1_data)
         book2 = await create_or_update_book(book2_data)
+        embed1 = discord.Embed(
+            title=f"Book 1: {book1.title} by {book1.author}",
+            description=f"ISBN: {book1.isbn}\n{book1.description}\n\u200B",
+            # color=discord.Color.red()
+        )
+        embed1.set_image(url=book1.cover_url)
+
+        embed2 = discord.Embed(
+            title=f"Book 2: {book2.title} by {book2.author}",
+            description=f"ISBN: {book2.isbn}\n{book2.description}\n\u200B",
+            # color=discord.Color.blue()
+        )
+        embed2.set_image(url=book2.cover_url)
+
         vote_message = await ctx.send(
-            f"Vote for '{book1.title}' vs '{book2.title}'\n\nReact with {EMOJI_BOOK_ONE} for '{book1.title}'\nReact with {EMOJI_BOOK_TWO} for '{book2.title}'")
+            content=f"React with {EMOJI_BOOK_ONE} for Book 1 or {EMOJI_BOOK_TWO} for Book 2",
+            embeds=[embed1, embed2]
+        )
+
+
         await vote_message.add_reaction(EMOJI_BOOK_ONE)
         await vote_message.add_reaction(EMOJI_BOOK_TWO)
         await create_book_vote(book1, book2, vote_message)

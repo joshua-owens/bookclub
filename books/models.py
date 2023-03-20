@@ -6,6 +6,7 @@ class Book(models.Model):
     author = models.CharField(max_length=255, default='')
     isbn = models.CharField(max_length=13, unique=True, default='')
     description = models.TextField(default='')
+    cover_url = models.URLField(null=True, blank=True)
 
     def __str__(self):
         return self.title
