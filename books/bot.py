@@ -109,7 +109,6 @@ async def on_raw_reaction_add(payload):
 
 @client.command()
 async def vote(ctx, isbn1: str, isbn2: str):
-    await ctx.send(f'Vote command received. ISBN1: {isbn1}, ISBN2: {isbn2}')
     book1_data = await get_book_data(isbn1)
     book2_data = await get_book_data(isbn2)
 
@@ -142,3 +141,5 @@ async def vote(ctx, isbn1: str, isbn2: str):
 
     else:
         await ctx.send("Invalid ISBN(s) provided.")
+
+    await ctx.message.delete()
