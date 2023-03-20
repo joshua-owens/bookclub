@@ -45,3 +45,13 @@ services:
     depends_on:
       - db
       - redis
+
+  discord_bot:
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+    command: python manage.py run_bot
+    volumes:
+      - .:/app
+    depends_on:
+      - web
