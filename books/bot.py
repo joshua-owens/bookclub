@@ -18,6 +18,7 @@ client = commands.Bot(command_prefix="!", intents=intents)
 EMOJI_BOOK_ONE = "\N{DIGIT ONE}\N{COMBINING ENCLOSING KEYCAP}"  # Thumbs Up emoji
 EMOJI_BOOK_TWO = "\N{DIGIT TWO}\N{COMBINING ENCLOSING KEYCAP}"  # Thumbs Down emoji
 
+
 async def get_book_data(isbn):
     service = build("books", "v1", developerKey=settings.GOOGLE_API_KEY)
     data = service.volumes().list(q=f"isbn:{isbn}").execute()
@@ -40,12 +41,20 @@ async def get_book_data(isbn):
     else:
         return None
 
+
 @database_sync_to_async
 def create_book_vote(book1, book2, vote_message):
     expires_at = timezone.now() + timedelta(weeks=2)
-    book_vote = BookVote(book1=book1, book2=book2, expires_at=expires_at, discord_message_id=vote_message.id, discord_channel_id=vote_message.channel.id)
+    book_vote = BookVote(
+        book1=book1,
+        book2=book2,
+        expires_at=expires_at,
+        discord_message_id=vote_message.id,
+        discord_channel_id=vote_message.channel.id,
+    )
     book_vote.save()
     return book_vote
+
 
 @database_sync_to_async
 def update_book_vote(vote_message_id, book1_votes, book2_votes):
@@ -54,17 +63,27 @@ def update_book_vote(vote_message_id, book1_votes, book2_votes):
         book_vote.update_vote_counts(book1_votes, book2_votes)
     return book_vote
 
+
 async def count_votes(vote_message):
     book1_votes = 0
     book2_votes = 0
 
     for reaction in vote_message.reactions:
         if str(reaction.emoji) == EMOJI_BOOK_ONE:
-            book1_votes = reaction.count - 1  # Subtract 1 to exclude the bot's own reaction
+            book1_votes = (
+                # Subtract 1 to exclude the bot's own reaction
+                reaction.count
+                - 1
+            )
         elif str(reaction.emoji) == EMOJI_BOOK_TWO:
-            book2_votes = reaction.count - 1  # Subtract 1 to exclude the bot's own reaction
+            book2_votes = (
+                # Subtract 1 to exclude the bot's own reaction
+                reaction.count
+                - 1
+            )
 
     return book1_votes, book2_votes
+
 
 @database_sync_to_async
 def create_or_update_book(book_data):
@@ -84,6 +103,7 @@ async def remove_reaction(message, emoji, user):
     reaction = discord.utils.get(message.reactions, emoji=str(emoji))
     if reaction:
         await reaction.remove(user)
+
 
 @client.event
 async def on_raw_reaction_add(payload):
@@ -118,22 +138,19 @@ async def vote(ctx, isbn1: str, isbn2: str):
         embed1 = discord.Embed(
             title=f"Book 1: {book1.title} by {book1.author}",
             description=f"ISBN: {book1.isbn}\n{book1.description}\n\u200B",
-            # color=discord.Color.red()
         )
         embed1.set_image(url=book1.cover_url)
 
         embed2 = discord.Embed(
             title=f"Book 2: {book2.title} by {book2.author}",
             description=f"ISBN: {book2.isbn}\n{book2.description}\n\u200B",
-            # color=discord.Color.blue()
         )
         embed2.set_image(url=book2.cover_url)
 
         vote_message = await ctx.send(
             content=f"React with {EMOJI_BOOK_ONE} for Book 1 or {EMOJI_BOOK_TWO} for Book 2",
-            embeds=[embed1, embed2]
+            embeds=[embed1, embed2],
         )
-
 
         await vote_message.add_reaction(EMOJI_BOOK_ONE)
         await vote_message.add_reaction(EMOJI_BOOK_TWO)

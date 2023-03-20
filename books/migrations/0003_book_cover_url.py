@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('books', '0002_remove_book_auther_remove_bookvote_book1_title_and_more'),
+        ("books", "0002_remove_book_auther_remove_bookvote_book1_title_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='book',
-            name='cover_url',
+            model_name="book",
+            name="cover_url",
             field=models.URLField(blank=True, null=True),
         ),
     ]

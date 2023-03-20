@@ -5,61 +5,70 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('books', '0001_initial'),
+        ("books", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='book',
-            name='auther',
+            model_name="book",
+            name="auther",
         ),
         migrations.RemoveField(
-            model_name='bookvote',
-            name='book1_title',
+            model_name="bookvote",
+            name="book1_title",
         ),
         migrations.RemoveField(
-            model_name='bookvote',
-            name='book2_title',
+            model_name="bookvote",
+            name="book2_title",
         ),
         migrations.RemoveField(
-            model_name='bookvote',
-            name='end_time',
+            model_name="bookvote",
+            name="end_time",
         ),
         migrations.AddField(
-            model_name='book',
-            name='author',
-            field=models.CharField(default='', max_length=255),
+            model_name="book",
+            name="author",
+            field=models.CharField(default="", max_length=255),
         ),
         migrations.AddField(
-            model_name='book',
-            name='description',
-            field=models.TextField(default=''),
+            model_name="book",
+            name="description",
+            field=models.TextField(default=""),
         ),
         migrations.AddField(
-            model_name='book',
-            name='isbn',
-            field=models.CharField(default='', max_length=13, unique=True),
+            model_name="book",
+            name="isbn",
+            field=models.CharField(default="", max_length=13, unique=True),
         ),
         migrations.AddField(
-            model_name='bookvote',
-            name='book1',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, related_name='book_vote_book1', to='books.book'),
+            model_name="bookvote",
+            name="book1",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="book_vote_book1",
+                to="books.book",
+            ),
         ),
         migrations.AddField(
-            model_name='bookvote',
-            name='book2',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, related_name='book_vote_book2', to='books.book'),
+            model_name="bookvote",
+            name="book2",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="book_vote_book2",
+                to="books.book",
+            ),
         ),
         migrations.AddField(
-            model_name='bookvote',
-            name='expires_at',
+            model_name="bookvote",
+            name="expires_at",
             field=models.DateTimeField(default=None),
         ),
         migrations.AlterField(
-            model_name='book',
-            name='title',
-            field=models.CharField(default='', max_length=255),
+            model_name="book",
+            name="title",
+            field=models.CharField(default="", max_length=255),
         ),
     ]
