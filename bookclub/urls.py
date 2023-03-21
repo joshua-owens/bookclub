@@ -16,9 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from core.views import HomeView
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('home/', HomeView.as_view(), name='home'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

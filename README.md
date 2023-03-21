@@ -20,3 +20,8 @@ Create a superuser
 ```shell
 docker-compose run web python manage.py createsuperuser
 ```
+
+Collect Static Assets
+```shell
+docker-compose run web python manage.py collectstatic
+```

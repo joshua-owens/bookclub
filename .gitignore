@@ -3,6 +3,7 @@
 
 .idea
 .env
+static
 
 ### Django ###
 *.log
