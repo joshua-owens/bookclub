@@ -42,7 +42,15 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'django.contrib.sites',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.discord',
+
     "books",
+    "core",
 ]
 
 MIDDLEWARE = [
@@ -91,6 +99,14 @@ DATABASES = {
         "PORT": os.getenv("POSTGRES_PORT", "5432"),
     }
 }
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
 
 # Password validation
@@ -141,3 +157,21 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "UTC"
+
+SITE_ID = 1
+
+SOCIALACCOUNT_PROVIDERS = {
+    'discord': {
+        'APP': {
+            'client_id': os.getenv('DISCORD_CLIENT_ID'),
+            'secret': os.getenv('DISCORD_SECRET'),
+            'key': ''
+        },
+        'SCOPE': [
+            'identify', 'guilds'
+        ],
+    }
+}
+
+DISCORD_SERVER_ID = os.getenv('DISCORD_SERVER_ID')
+LOGIN_REDIRECT_URL = 'home'
