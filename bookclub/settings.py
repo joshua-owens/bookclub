@@ -163,16 +163,21 @@ SITE_ID = 1
 
 SOCIALACCOUNT_PROVIDERS = {
     'discord': {
-        'APP': {
-            'client_id': os.getenv('DISCORD_CLIENT_ID'),
-            'secret': os.getenv('DISCORD_SECRET'),
-            'key': ''
-        },
+        # Discord Creds need to be set in the DB. There is a bug in allauth
+        # when creds are set in settings.py
+        # @see https://github.com/pennersr/django-allauth/issues/2467
+        # 'APP': {
+        #     'client_id': os.getenv('DISCORD_CLIENT_ID'),
+        #     'secret': os.getenv('DISCORD_SECRET'),
+        #     'key': ''
+        # },
         'SCOPE': [
-            'identify', 'guilds'
+            'identify', 'guilds', 'email'
         ],
     }
 }
+
+SOCIALACCOUNT_STORE_TOKENS=True
 
 DISCORD_SERVER_ID = os.getenv('DISCORD_SERVER_ID')
 LOGIN_REDIRECT_URL = 'home'
