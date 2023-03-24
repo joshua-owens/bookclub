@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.discord',
+    'inertia',
 
     "books",
     "core",
@@ -61,6 +62,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'inertia.middleware.InertiaMiddleware',
 ]
 
 ROOT_URLCONF = "bookclub.urls"
@@ -181,3 +183,6 @@ SOCIALACCOUNT_STORE_TOKENS=True
 
 DISCORD_SERVER_ID = os.getenv('DISCORD_SERVER_ID')
 LOGIN_REDIRECT_URL = 'home'
+
+
+INERTIA_LAYOUT='core/layout.html'
