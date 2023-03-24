@@ -1,6 +1,11 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+import { createApp, h } from 'vue';
+import { createInertiaApp } from '@inertiajs/inertia-vue3';
 
-import './assets/main.css'
-
-createApp(App).mount('#app')
+createInertiaApp({
+  resolve: (name) => require(`./Pages/${name}`),
+  setup({ el, app, props, plugin }) {
+    return createApp({ render: () => h(app, props) })
+      .use(plugin)
+      .mount(el);
+  },
+});
