@@ -48,11 +48,14 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.discord',
+    'django_vite',
     'inertia',
+    'js_routes',
 
     "books",
     "core",
 ]
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -70,8 +73,8 @@ ROOT_URLCONF = "bookclub.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
-        "APP_DIRS": True,
+        'APP_DIRS': True,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
@@ -142,11 +145,24 @@ USE_I18N = True
 USE_TZ = True
 
 
+
+INERTIA_LAYOUT='layout.html'
+DJANGO_VITE_DEV_MODE = DEBUG
+JS_ROUTES_INCLUSION_LIST = [
+    'home',
+    'contact'
+]
+DJANGO_VITE_ASSETS_PATH = BASE_DIR / "static" / "dist"
+CSRF_HEADER_NAME = 'HTTP_X_XSRF_TOKEN'
+CSRF_COOKIE_NAME = 'XSRF-TOKEN'
+STATIC_ROOT = BASE_DIR / "static"
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [DJANGO_VITE_ASSETS_PATH]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -184,5 +200,3 @@ SOCIALACCOUNT_STORE_TOKENS=True
 DISCORD_SERVER_ID = os.getenv('DISCORD_SERVER_ID')
 LOGIN_REDIRECT_URL = 'home'
 
-
-INERTIA_LAYOUT='core/layout.html'
