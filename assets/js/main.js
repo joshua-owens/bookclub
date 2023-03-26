@@ -3,6 +3,7 @@ import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
 import axios from 'axios';
 import Layout from './components/Layout.vue';
+import '../css/style.css';
 
 const pages = import.meta.glob('./pages/**/*.vue');
 
